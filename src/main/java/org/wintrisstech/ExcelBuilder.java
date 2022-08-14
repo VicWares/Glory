@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.text.DateFormat;
@@ -73,7 +74,8 @@ public class ExcelBuilder
         atsAway = atsAwaysMap.get(dataEventID);
         ouOver = ouOversMap.get(dataEventID);
         ouUnder = ouUndersMap.get(dataEventID);
-        homeNickname = nflElements.attr("data-home-team-nickname-search");
+
+        Elements dataEventIdElements = nflElements.select("[data-event-id='" + dataEventID + "']");
 
         sportDataSheet.getRow(eventIndex).createCell(0);
         sportDataSheet.getRow(eventIndex).getCell(0).setCellStyle(leftStyle);
@@ -93,9 +95,10 @@ public class ExcelBuilder
         sportDataSheet.getRow(eventIndex).getCell(3).setCellStyle(centerStyle);
         sportDataSheet.getRow(eventIndex).getCell(3).setCellValue(weekNumber);
 
-        sportDataSheet.getRow(eventIndex).createCell(10);//Home team e.g. Dallas
+        homeNickname =  dataEventIdElements.attr("data-home-team-nickname-search");
+        sportDataSheet.getRow(eventIndex).createCell(10);//Home team + nickname e.g. Dallas Coyboys
         sportDataSheet.getRow(eventIndex).getCell(10).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(10).setCellValue(homeTeam);
+        sportDataSheet.getRow(eventIndex).getCell(10).setCellValue(homeTeam + " " + homeNickname);
 
         sportDataSheet.getRow(eventIndex).createCell(12);//Spread home odds, column M
         sportDataSheet.getRow(eventIndex).getCell(12).setCellStyle(centerStyle);
@@ -105,9 +108,10 @@ public class ExcelBuilder
         sportDataSheet.getRow(eventIndex).getCell(17).setCellStyle(centerStyle);
         sportDataSheet.getRow(eventIndex).getCell(17).setCellValue(homeMoneyLineOddsMap.get(dataEventID));
 
-        sportDataSheet.getRow(eventIndex).createCell(25);//Away team
+        awayNickname =  dataEventIdElements.attr("data-away-team-nickname-search");
+        sportDataSheet.getRow(eventIndex).createCell(25);//Away team + nickname
         sportDataSheet.getRow(eventIndex).getCell(25).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(25).setCellValue(awayTeam);
+        sportDataSheet.getRow(eventIndex).getCell(25).setCellValue(awayTeam + " " + awayNickname);
 
         sportDataSheet.getRow(eventIndex).createCell(26);//Spread away odds, column AA
         sportDataSheet.getRow(eventIndex).getCell(26).setCellStyle(centerStyle);
