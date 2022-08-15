@@ -1,7 +1,7 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220814C
+ * version Glory 220814D
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
@@ -47,34 +47,27 @@ public class Main
         org.jsoup.select.Elements soupOddsElements = webSiteReader.readWebsite("https://www.covers.com/sport/football/nfl/odds");
         org.jsoup.select.Elements weekElements = nflElements.select(".cmg_game_data, .cmg_matchup_game_box");//Lots of good stuff in this Element: team name, team city...
         xRefMap = buildXref(weekElements);//Key is data-event-ID e.g 87579, Value is data-game e.g 265282, two different ways of selecting the same matchup (game)
-        System.out.println("Main47 xRerMap => " + xRefMap);
         System.out.println("Main48 week number => " + weekNumber + ", week date => " + weekDate + ", " + weekElements.size() + " games this week");
-        dataCollector.collectTeamInfo(weekElements);
         sportDataWorkbook = excelReader.readSportData();
-        System.out.println("Main51 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BEGIN MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+        System.out.println("Main52 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BEGIN MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
         for (Map.Entry<String, String> entry : xRefMap.entrySet())
         {
             loopCounter++;
             String dataEventId = entry.getKey();
             dataGame = xRefMap.get(dataEventId);
-            System.out.println("Main70, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + " " + dataCollector.getAwayFullNameMap().get(dataEventId) + " vs " + dataCollector.getHomeFullNameMap().get(dataEventId));
+            System.out.println("Main58, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + " ");
             consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails?externalId=%2fsport%2ffootball%2fcompetition%3a" + dataEventId);
             dataCollector.collectConsensusData(consensusElements, dataEventId);
-            excelBuilder.setThisWeekAwayTeamsMap(dataCollector.getAwayFullNameMap());
-            excelBuilder.setHomeTeamsMap(dataCollector.getHomeFullNameMap());
             excelBuilder.setGameDatesMap(dataCollector.getGameDatesMap());
             excelBuilder.setAtsHomesMap(dataCollector.getAtsHomesMap());
             excelBuilder.setAtsAwaysMap(dataCollector.getAtsAwaysMap());
             excelBuilder.setOuOversMap(dataCollector.getOuOversMap());
             excelBuilder.setOuUndersMap(dataCollector.getOuUndersMap());
-            excelBuilder.setCompleteHomeTeamName(dataCollector.getHomeTeamCompleteName());
-            excelBuilder.setCompleteAwayTeamName(dataCollector.getAwayTeamCompleteName());
             excelBuilder.setGameIdentifier(dataCollector.getGameIdentifierMap().get(dataEventId));
             excelBuilder.buildExcel(sportDataWorkbook, dataEventId, globalMatchupIndex, dataCollector.getGameIdentifierMap().get(dataEventId), nflElements);
-            dataCollector.collectOdds(dataGame, soupOddsElements);
             globalMatchupIndex++;
         }
-        ///////////////////////////////////////////////////////////////////////// END MAIN LOOP ////////////////////////////////////////////////////////////
+        System.out.println("Main70 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
         excelWriter.openOutputStream();
         excelWriter.writeSportData(sportDataWorkbook);
         excelWriter.closeOutputStream();

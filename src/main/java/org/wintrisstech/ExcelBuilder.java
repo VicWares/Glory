@@ -24,7 +24,7 @@ public class ExcelBuilder
     private String weekNumber;
     private String ouUnder;
     private String ouOver;
-    private String homeTeamCity;
+    private String homeCity;
     private String awayTeam;
     private String thisMatchupDate;
     private String atsHome;
@@ -38,8 +38,8 @@ public class ExcelBuilder
     private String homeSpreadOdds;
     private String awayNickname;
     private String homeNickname;
-    private HashMap<String, String> homeTeamsMap = new HashMap<>();
-    private HashMap<String, String> awayTeamsMap = new HashMap<>();
+//    private HashMap<String, String> homeTeamsMap = new HashMap<>();
+//    private HashMap<String, String> awayTeamsMap = new HashMap<>();
     private HashMap<String, String> gameDatesMap = new HashMap<>();
     private HashMap<String, String> atsHomesMap = new HashMap<>();
     private HashMap<String, String> atsAwaysMap = new HashMap<>();
@@ -53,7 +53,7 @@ public class ExcelBuilder
     private HashMap<String, String> awayMoneyLineOddsMap = new HashMap<>();
     private HashMap<String, String> homeSpreadOddsMap = new HashMap<>();
     private HashMap<String, String> awaySpreadOddsMap = new HashMap<>();
-    private String awayTeamCity;
+    private String awayCity;
     private String homeAbbreviation;
     private String awayTeamAbbreviation;
     public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, int eventIndex, String gameIdentifier, Elements nflElements)
@@ -76,21 +76,15 @@ public class ExcelBuilder
         atsAway = atsAwaysMap.get(dataEventID);
         ouOver = ouOversMap.get(dataEventID);
         ouUnder = ouUndersMap.get(dataEventID);
-
         XSSFCreationHelper createHelper = sportDataWorkbook.getCreationHelper();
         XSSFCellStyle cellStyle         = sportDataWorkbook.createCellStyle();
         cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("MMMM dd, yyyy"));
-
         Elements dataEventIdElements = nflElements.select("[data-event-id='" + dataEventID + "']");//All elements for this matchup
-        sportDataSheet.autoSizeColumn(0);
+
+        sportDataSheet.autoSizeColumn(0);//Time stamp e.g. 2022/08/14 20:28:42
         sportDataSheet.getRow(eventIndex).createCell(0);//Time stamp
         sportDataSheet.getRow(eventIndex).getCell(0).setCellStyle(leftStyle);
         sportDataSheet.getRow(0).getCell(0).setCellValue(time);
-
-        String homeTeamPlusNickname = homeTeamCity + " " + homeNickname;
-        String awayTeamPlusNickname = awayTeam + " " + awayNickname;
-        gameIdentifier = season + " - " + awayTeamPlusNickname + " @ " + homeTeamPlusNickname;
-        sportDataSheet.getRow(eventIndex).getCell(0).setCellValue(gameIdentifier);//e.g. 2022 - Washington Football Team @ Dallas Cowboys
 
         sportDataSheet.autoSizeColumn(1);//Matchup up date e.g. 2022-09-11
         sportDataSheet.getRow(eventIndex).createCell(1);
@@ -123,10 +117,10 @@ public class ExcelBuilder
 
         sportDataSheet.autoSizeColumn(10);
         homeNickname =  dataEventIdElements.attr("data-home-team-nickname-search");
-        homeTeamCity = dataEventIdElements.attr("data-home-team-city-search");
+        homeCity = dataEventIdElements.attr("data-home-team-city-search");
         sportDataSheet.getRow(eventIndex).createCell(10);//Home team + nickname e.g. Dallas Coyboys
         sportDataSheet.getRow(eventIndex).getCell(10).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(10).setCellValue(homeTeamCity + " " + homeNickname);
+        sportDataSheet.getRow(eventIndex).getCell(10).setCellValue(homeCity + " " + homeNickname);
 
         sportDataSheet.autoSizeColumn(11);
         homeAbbreviation =  dataEventIdElements.attr("data-home-team-shortname-search");//Home team abbreviation e.g. LAR
@@ -146,14 +140,18 @@ public class ExcelBuilder
 
         sportDataSheet.autoSizeColumn(25);
         awayNickname =  dataEventIdElements.attr("data-away-team-nickname-search");
-        awayTeamCity = dataEventIdElements.attr("data-away-team-city-search");
+        awayCity = dataEventIdElements.attr("data-away-team-city-search");
         sportDataSheet.getRow(eventIndex).createCell(25);//Away team + nickname e.g. Dallas Coyboys
         sportDataSheet.getRow(eventIndex).getCell(25).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(25).setCellValue(awayTeamCity + " " + awayNickname);
+        sportDataSheet.getRow(eventIndex).getCell(25).setCellValue(awayCity + " " + awayNickname);
+
+        String homeTeamPlusNickname = homeCity + " " + homeNickname;
+        String awayTeamPlusNickname = awayCity + " " + awayNickname;
+        gameIdentifier = season + " - " + awayTeamPlusNickname + " @ " + homeTeamPlusNickname;
+        sportDataSheet.getRow(eventIndex).getCell(0).setCellValue(gameIdentifier);//e.g. 2022 - Washington Football Team @ Dallas Cowboys
 
         sportDataSheet.autoSizeColumn(26);//Away team abbreviation e.g. LAR
         awayTeamAbbreviation = dataEventIdElements.attr("data-home-team-shortname-search");
-        System.out.println("..........................." + awayTeamAbbreviation);
         sportDataSheet.getRow(eventIndex).createCell(26);
         sportDataSheet.getRow(eventIndex).getCell(26).setCellStyle(centerStyle);
         sportDataSheet.getRow(eventIndex).getCell(26).setCellValue(awayTeamAbbreviation);
@@ -184,14 +182,6 @@ public class ExcelBuilder
         sportDataSheet.getRow(eventIndex).getCell(66).setCellValue(ouUnder);
         return sportDataWorkbook;
     }
-    public void setHomeTeamsMap(HashMap<String, String> homeTeamsMap)
-    {
-        this.homeTeamsMap = homeTeamsMap;
-    }
-    public void setThisWeekAwayTeamsMap(HashMap<String, String> thisWeekAwayTeamsMap)
-    {
-        this.awayTeamsMap = thisWeekAwayTeamsMap;
-    }
     public void setGameDatesMap(HashMap<String, String> gameDatesMap)
     {
         this.gameDatesMap = gameDatesMap;
@@ -211,14 +201,6 @@ public class ExcelBuilder
     public void setOuUndersMap(HashMap<String, String> ouUndersMap)
     {
         this.ouUndersMap = ouUndersMap;
-    }
-    public void setCompleteHomeTeamName(String completeHomeTeamName)
-    {
-        this.completeHomeTeamName = completeHomeTeamName;
-    }
-    public void setCompleteAwayTeamName(String completeAwayTeamName)
-    {
-        this.completeAwayTeamName = completeAwayTeamName;
     }
     public void setGameIdentifier(String gameIdentifier)
     {

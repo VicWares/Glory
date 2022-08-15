@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220814C
+ * version Glory 220814D
  * Builds data event id array and calendar date array
  *******************************************************************/
 import org.jsoup.nodes.Element;
@@ -31,17 +31,6 @@ public class DataCollector
     private static HashMap<String, String> awayFractionalOddsMap = new HashMap<>();
     private HashMap<String, String> mlHomeOdds = new HashMap<String, String>();
     private HashMap<String, String> mlAwayOdds = new HashMap<String, String>();
-    private String dataEventId;
-
-    private String awayTeamCompleteName;//e.g. Kansas City Chiefs
-    private static String homeTeamCompleteName;//e.g Houston Texans
-    private String gameIdentifier;//e.g 2020 - Houston Texans @ Kansas City Chiefs
-    private String awayTeamScore;
-    private String gameDate;
-    private String awayTeamCity;
-    private String homeTeamCity;
-    private String thisWeek;
-    private String thisSeason = "2022";
     private ArrayList<String> thisWeekGameDates = new ArrayList<String>();
     private ArrayList<String> thisGameWeekNumbers = new ArrayList<String>();
     private ArrayList<String> thisWeekHomeTeamScores = new ArrayList<String>();
@@ -51,7 +40,6 @@ public class DataCollector
     private ArrayList<String> thisWeekAwayTeams = new ArrayList<String>();
     private HashMap<String, String> gameDatesMap = new HashMap<>();
     private HashMap<String, String> gameIdentifierMap = new HashMap<>();
-    private HashMap<String, String> homeFullNameMap = new HashMap<>();
     private HashMap<String, String> awayFullNameMap = new HashMap<>();
     private HashMap<String, String> homeShortNameMap = new HashMap<>();
     private HashMap<String, String> awayShortNameMap = new HashMap<>();
@@ -71,38 +59,8 @@ public class DataCollector
     {
         return awayMLoddsMap;
     }
-    public void collectTeamInfo(Elements weekElements)//From covers.com website for this week's matchups
-    {
-        for (Element e : weekElements)//Build week matchup IDs array
-        {
-
-            homeTeamCity = e.attr("data-home-team-city-search");
-            homeTeamCity = cityNameMap.get(homeTeamCity);
-
-            awayTeamCity = e.attr("data-away-team-city-search");
-            awayTeamCity = cityNameMap.get(awayTeamCity);
-            gameIdentifier = thisSeason + " - " + awayTeamCompleteName + " @ " + homeTeamCompleteName;
-            dataEventId = e.attr("data-event-id");
-            String[] gameDateTime = e.attr("data-game-date").split(" ");
-            gameDate = gameDateTime[0];
-            awayTeamScore = e.attr("data-away-score");
-            thisWeek = e.attr("data-competition-type");
-            thisWeekGameDates.add(gameDate);
-            gameDatesMap.put(dataEventId, gameDate);
-            gameIdentifierMap.put(dataEventId, gameIdentifier);
-            thisWeekHomeTeams.add(homeTeamCompleteName);
-            thisWeekAwayTeams.add(awayTeamCompleteName);
-            thisWeekAwayTeamScores.add((awayTeamScore));
-            thisGameWeekNumbers.add(thisWeek);
-            String awayShortName = e.attr("data-away-team-shortname-search");//Away team
-            awayShortNameMap.put(dataEventId, awayShortName);
-            String homeShortName = e.attr("data-home-team-shortname-search");//Home team
-            homeShortNameMap.put(dataEventId, homeShortName);
-        }
-    }
     public void collectConsensusData(Elements Consensus, String MatchupID)
     {
-        this.dataEventId = MatchupID;
         String ouOver = null;
         String ouUnder = null;
         String atsHome = null;
@@ -118,30 +76,15 @@ public class DataCollector
         }
         catch (Exception e)
         {
-            System.out.println("DC132 DataCollector, no consensus data");
-            ouUnder = "no data";
-            ouOver = "no data";
-            atsHome = "no data";
-            atsAway = "no data";
+            ouUnder = "no consensus data";
+            ouOver = "no consensus data";
+            atsHome = "no consensus data";
+            atsAway ="no consensus data";
         }
         ouOversMap.put(MatchupID, ouOver);
         ouUndersMap.put(MatchupID, ouUnder);
         atsHomesMap.put(MatchupID, atsAway);
         atsAwaysMap.put(MatchupID, atsHome);
-    }
-    public void collectOdds(String dataGame, Elements soupOddsElements)
-    {
-        String s = soupOddsElements.select("[data-book='WynnBET']~[data-game='265283'][data-type='moneyline'].__awayOdds.American.__american").text();
-        System.out.println("DC144 collecting odds");
-        Elements e = soupOddsElements.select("[data-book='WynnBET'][data-type='moneyline'] .__awayOdds .American.__american");
-    }
-    public HashMap<String, String> getHomeFullNameMap()
-    {
-        return homeFullNameMap;
-    }
-    public HashMap<String, String> getAwayFullNameMap()
-    {
-        return awayFullNameMap;
     }
     public HashMap<String, String> getGameDatesMap()
     {
@@ -166,22 +109,6 @@ public class DataCollector
     public HashMap<String, String> getGameIdentifierMap()
     {
         return gameIdentifierMap;
-    }
-    public void setThisSeason(String thisSeason)
-    {
-        this.thisSeason = thisSeason;
-    }
-    public String getAwayTeamCompleteName()
-    {
-        return awayTeamCompleteName;
-    }
-    public String getHomeTeamCompleteName()
-    {
-        return homeTeamCompleteName;
-    }
-    public void setCityNameMap(HashMap<String, String> cityNameMap)
-    {
-        this.cityNameMap = cityNameMap;
     }
 }
 
