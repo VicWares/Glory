@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220814B
+ * version Glory 220814C
  *******************************************************************/
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -12,21 +12,19 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Spliterator;
 public class ExcelBuilder
 {
     private String season;
     private String weekNumber;
     private String ouUnder;
     private String ouOver;
-    private String homeTeam;
+    private String homeTeamCity;
     private String awayTeam;
     private String thisMatchupDate;
     private String atsHome;
@@ -55,6 +53,9 @@ public class ExcelBuilder
     private HashMap<String, String> awayMoneyLineOddsMap = new HashMap<>();
     private HashMap<String, String> homeSpreadOddsMap = new HashMap<>();
     private HashMap<String, String> awaySpreadOddsMap = new HashMap<>();
+    private String awayTeamCity;
+    private String homeAbbreviation;
+    private String awayTeamAbbreviation;
     public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, int eventIndex, String gameIdentifier, Elements nflElements)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -70,9 +71,6 @@ public class ExcelBuilder
         sportDataSheet.setDefaultColumnStyle(0, leftStyle);
         sportDataSheet.setDefaultColumnStyle(1, centerStyle);
         sportDataSheet.createRow(eventIndex);
-        sportDataSheet.setColumnWidth(1, 25 * 256);
-        homeTeam = homeTeamsMap.get(dataEventID);
-        awayTeam = awayTeamsMap.get(dataEventID);
         thisMatchupDate = gameDatesMap.get(dataEventID);
         atsHome = atsHomesMap.get(dataEventID);
         atsAway = atsAwaysMap.get(dataEventID);
@@ -89,12 +87,12 @@ public class ExcelBuilder
         sportDataSheet.getRow(eventIndex).getCell(0).setCellStyle(leftStyle);
         sportDataSheet.getRow(0).getCell(0).setCellValue(time);
 
-        String homeTeamPlusNickname = homeTeam + " " + homeNickname;
+        String homeTeamPlusNickname = homeTeamCity + " " + homeNickname;
         String awayTeamPlusNickname = awayTeam + " " + awayNickname;
         gameIdentifier = season + " - " + awayTeamPlusNickname + " @ " + homeTeamPlusNickname;
         sportDataSheet.getRow(eventIndex).getCell(0).setCellValue(gameIdentifier);//e.g. 2022 - Washington Football Team @ Dallas Cowboys
 
-        sportDataSheet.autoSizeColumn(1);
+        sportDataSheet.autoSizeColumn(1);//Matchup up date e.g. 2022-09-11
         sportDataSheet.getRow(eventIndex).createCell(1);
         sportDataSheet.getRow(eventIndex).getCell(1).setCellStyle(centerStyle);
         sportDataSheet.getRow(eventIndex).getCell(1).setCellValue(thisMatchupDate);
@@ -125,9 +123,16 @@ public class ExcelBuilder
 
         sportDataSheet.autoSizeColumn(10);
         homeNickname =  dataEventIdElements.attr("data-home-team-nickname-search");
+        homeTeamCity = dataEventIdElements.attr("data-home-team-city-search");
         sportDataSheet.getRow(eventIndex).createCell(10);//Home team + nickname e.g. Dallas Coyboys
         sportDataSheet.getRow(eventIndex).getCell(10).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(10).setCellValue(homeTeam + " " + homeNickname);
+        sportDataSheet.getRow(eventIndex).getCell(10).setCellValue(homeTeamCity + " " + homeNickname);
+
+        sportDataSheet.autoSizeColumn(11);
+        homeAbbreviation =  dataEventIdElements.attr("data-home-team-shortname-search");//Home team abbreviation e.g. LAR
+        sportDataSheet.getRow(eventIndex).createCell(11);
+        sportDataSheet.getRow(eventIndex).getCell(11).setCellStyle(centerStyle);
+        sportDataSheet.getRow(eventIndex).getCell(11).setCellValue(homeAbbreviation);
 
         sportDataSheet.autoSizeColumn(12);
         sportDataSheet.getRow(eventIndex).createCell(12);//Spread home odds, column M
@@ -141,14 +146,17 @@ public class ExcelBuilder
 
         sportDataSheet.autoSizeColumn(25);
         awayNickname =  dataEventIdElements.attr("data-away-team-nickname-search");
-        sportDataSheet.getRow(eventIndex).createCell(25);//Away team + nickname
+        awayTeamCity = dataEventIdElements.attr("data-away-team-city-search");
+        sportDataSheet.getRow(eventIndex).createCell(25);//Away team + nickname e.g. Dallas Coyboys
         sportDataSheet.getRow(eventIndex).getCell(25).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(25).setCellValue(awayTeam + " " + awayNickname);
+        sportDataSheet.getRow(eventIndex).getCell(25).setCellValue(awayTeamCity + " " + awayNickname);
 
-        sportDataSheet.autoSizeColumn(26);
-        sportDataSheet.getRow(eventIndex).createCell(26);//Spread away odds, column AA
+        sportDataSheet.autoSizeColumn(26);//Away team abbreviation e.g. LAR
+        awayTeamAbbreviation = dataEventIdElements.attr("data-home-team-shortname-search");
+        System.out.println("..........................." + awayTeamAbbreviation);
+        sportDataSheet.getRow(eventIndex).createCell(26);
         sportDataSheet.getRow(eventIndex).getCell(26).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(26).setCellValue(awaySpreadOddsMap.get(dataEventID));
+        sportDataSheet.getRow(eventIndex).getCell(26).setCellValue(awayTeamAbbreviation);
 
         sportDataSheet.autoSizeColumn(31);
         sportDataSheet.getRow(eventIndex).createCell(31);//MoneyLine Bet365 away odds, column AF

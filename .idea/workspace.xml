@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220814A...More clean up and add excelBuilder builds">
+    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220814B...Added game day, month...abbreviation only.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/DataCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/DataCollector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelWriter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/WebSiteReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/WebSiteReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +83,8 @@
       <workItem from="1660450148121" duration="226000" />
       <workItem from="1660494494398" duration="2054000" />
       <workItem from="1660515821042" duration="3498000" />
-      <workItem from="1660519338968" duration="2875000" />
+      <workItem from="1660519338968" duration="3953000" />
+      <workItem from="1660526847441" duration="3824000" />
     </task>
     <task id="LOCAL-00001" summary="version 220814...combo working">
       <created>1660436446941</created>
@@ -117,7 +114,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660450041524</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="version 220814B...Added game day, month...abbreviation only.">
+      <created>1660522279346</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1660522279346</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -138,6 +142,7 @@
     <MESSAGE value="version 220814...combo working" />
     <MESSAGE value="version 220814A...Clean up added home/away team names" />
     <MESSAGE value="version 220814A...More clean up and add excelBuilder builds" />
-    <option name="LAST_COMMIT_MESSAGE" value="version 220814A...More clean up and add excelBuilder builds" />
+    <MESSAGE value="version 220814B...Added game day, month...abbreviation only." />
+    <option name="LAST_COMMIT_MESSAGE" value="version 220814B...Added game day, month...abbreviation only." />
   </component>
 </project>
