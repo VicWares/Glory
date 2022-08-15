@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 public class Main
 {
-    private static final String VERSION = "220814";
+    private static final String VERSION = "220814B";
     private XSSFWorkbook sportDataWorkbook;
     private HashMap<String, String> weekDateMap = new HashMap<>();
     private HashMap<String, String> cityNameMap = new HashMap<>();
@@ -40,7 +40,7 @@ public class Main
         fillCityNameMap();
         fillWeekNumberMap();
         String weekNumber = JOptionPane.showInputDialog("Enter NFL week number");
-        weekNumber = "1";//For tsting
+        //weekNumber = "1";//For tsting
         excelBuilder.setWeekNumber(weekNumber);
         String weekDate = weekDateMap.get(weekNumber);//Gets week date e.g. 2022-09-08 from week number e.g. 1,2,3,4,...
         org.jsoup.select.Elements nflElements = webSiteReader.readWebsite("https://www.covers.com/sports/nfl/matchups?selectedDate=" + weekDate);//Covers.com "Scores and Matchups" page for this week
