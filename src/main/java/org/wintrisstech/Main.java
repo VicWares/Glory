@@ -1,7 +1,7 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220815
+ * version Glory 220816
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 public class Main
 {
-    private static final String VERSION = "220815";
+    private static final String VERSION = "220816";
     private XSSFWorkbook sportDataWorkbook;
     private HashMap<String, String> weekDateMap = new HashMap<>();
     private HashMap<String, String> cityNameMap = new HashMap<>();
@@ -58,7 +58,7 @@ public class Main
             loopCounter++;
             String dataEventId = entry.getKey();
             dataGame = xRefMap.get(dataEventId);
-            System.out.println("Main61, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + excelBuilder.getGameIdentifier());
+            System.out.println("Main61, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + excelBuilder.getGameIdentifier() + " Date => " + excelBuilder.getThisMatchupDate());
             consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails?externalId=%2fsport%2ffootball%2fcompetition%3a" + dataEventId);
             dataCollector.collectConsensusData(consensusElements, dataEventId);
             excelBuilder.setGameDatesMap(dataCollector.getGameDatesMap());
