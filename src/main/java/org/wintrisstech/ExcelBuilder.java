@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220814C
+ * version Glory 220815
  *******************************************************************/
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -56,7 +56,8 @@ public class ExcelBuilder
     private String awayCity;
     private String homeAbbreviation;
     private String awayTeamAbbreviation;
-    public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, int eventIndex, String gameIdentifier, Elements nflElements)
+    private String awayTeamSpreadOpenOdds;
+    public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, String dataGame , int eventIndex, Elements soupOddsElements, Elements nflElements)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -80,7 +81,7 @@ public class ExcelBuilder
         XSSFCellStyle cellStyle         = sportDataWorkbook.createCellStyle();
         cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("MMMM dd, yyyy"));
         Elements dataEventIdElements = nflElements.select("[data-event-id='" + dataEventID + "']");//All elements for this matchup
-
+        String bet365String = dataEventIdElements.attr("bet365");
         sportDataSheet.autoSizeColumn(0);//Time stamp e.g. 2022/08/14 20:28:42
         sportDataSheet.getRow(eventIndex).createCell(0);//Time stamp
         sportDataSheet.getRow(eventIndex).getCell(0).setCellStyle(leftStyle);
@@ -155,6 +156,12 @@ public class ExcelBuilder
         sportDataSheet.getRow(eventIndex).createCell(26);
         sportDataSheet.getRow(eventIndex).getCell(26).setCellStyle(centerStyle);
         sportDataSheet.getRow(eventIndex).getCell(26).setCellValue(awayTeamAbbreviation);
+
+        sportDataSheet.autoSizeColumn(28);//Away spread moneyline closed odds
+        awaySpreadOdds = soupOddsElements.select("[data-book='bet365'][data-game='" + dataGame + "'][data-type='moneyline'] div.__awayOdds div.__decimal").text();
+        sportDataSheet.getRow(eventIndex).createCell(28);
+        sportDataSheet.getRow(eventIndex).getCell(28).setCellStyle(centerStyle);
+        sportDataSheet.getRow(eventIndex).getCell(28).setCellValue(awaySpreadOdds);
 
         sportDataSheet.autoSizeColumn(31);
         sportDataSheet.getRow(eventIndex).createCell(31);//MoneyLine Bet365 away odds, column AF
@@ -231,6 +238,10 @@ public class ExcelBuilder
     public void setWeekNumber(String weekNumber)
     {
         this.weekNumber = weekNumber;
+    }
+    public String getGameIdentifier()
+    {
+        return gameIdentifier;
     }
 }
 

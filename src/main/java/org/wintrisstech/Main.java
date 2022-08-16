@@ -1,17 +1,19 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220814D
+ * version Glory 220815
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 public class Main
 {
-    private static final String VERSION = "220814B";
+    private static final String VERSION = "220815";
     private XSSFWorkbook sportDataWorkbook;
     private HashMap<String, String> weekDateMap = new HashMap<>();
     private HashMap<String, String> cityNameMap = new HashMap<>();
@@ -27,6 +29,7 @@ public class Main
     private int loopCounter;
     private String dataGame;
     private String season = "2022";
+    private Elements bet365Elements;
     public static void main(String[] args) throws IOException, InterruptedException
     {
         System.out.println("Main43 Starting main() version " + VERSION);
@@ -55,7 +58,7 @@ public class Main
             loopCounter++;
             String dataEventId = entry.getKey();
             dataGame = xRefMap.get(dataEventId);
-            System.out.println("Main58, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + " ");
+            System.out.println("Main61, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + excelBuilder.getGameIdentifier());
             consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails?externalId=%2fsport%2ffootball%2fcompetition%3a" + dataEventId);
             dataCollector.collectConsensusData(consensusElements, dataEventId);
             excelBuilder.setGameDatesMap(dataCollector.getGameDatesMap());
@@ -64,7 +67,7 @@ public class Main
             excelBuilder.setOuOversMap(dataCollector.getOuOversMap());
             excelBuilder.setOuUndersMap(dataCollector.getOuUndersMap());
             excelBuilder.setGameIdentifier(dataCollector.getGameIdentifierMap().get(dataEventId));
-            excelBuilder.buildExcel(sportDataWorkbook, dataEventId, globalMatchupIndex, dataCollector.getGameIdentifierMap().get(dataEventId), nflElements);
+            excelBuilder.buildExcel(sportDataWorkbook, dataEventId, dataGame, globalMatchupIndex, soupOddsElements, nflElements);
             globalMatchupIndex++;
         }
         System.out.println("Main70 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");

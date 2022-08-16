@@ -4,11 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220814C Ten columns properly filled...">
+    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220814D Major clean up...rewmoved lots of dead code.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/DataCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/DataCollector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelWriter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/WebSiteReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/WebSiteReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +89,8 @@
       <workItem from="1660515821042" duration="3498000" />
       <workItem from="1660519338968" duration="3953000" />
       <workItem from="1660526847441" duration="4454000" />
-      <workItem from="1660532922206" duration="3337000" />
+      <workItem from="1660532922206" duration="3696000" />
+      <workItem from="1660595630658" duration="13508000" />
     </task>
     <task id="LOCAL-00001" summary="version 220814...combo working">
       <created>1660436446941</created>
@@ -129,7 +134,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660532531534</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="version 220814D Major clean up...rewmoved lots of dead code.">
+      <created>1660536610091</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1660536610091</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,6 +164,7 @@
     <MESSAGE value="version 220814A...More clean up and add excelBuilder builds" />
     <MESSAGE value="version 220814B...Added game day, month...abbreviation only." />
     <MESSAGE value="version 220814C Ten columns properly filled..." />
-    <option name="LAST_COMMIT_MESSAGE" value="version 220814C Ten columns properly filled..." />
+    <MESSAGE value="version 220814D Major clean up...rewmoved lots of dead code." />
+    <option name="LAST_COMMIT_MESSAGE" value="version 220814D Major clean up...rewmoved lots of dead code." />
   </component>
 </project>
