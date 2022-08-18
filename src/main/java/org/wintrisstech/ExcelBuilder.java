@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220817
+ * version Glory 220817A
  *******************************************************************/
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -63,7 +63,7 @@ public class ExcelBuilder
     private Elements dataEventIdElements;
     private Elements bet365DataGameElements;
     private String awaySpreadOpenOdds;
-    public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, String dataGame , int eventIndex, Elements soupOddsElements, Elements nflElements)
+    public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, String dataGame , int excelRowIndex, Elements soupOddsElements, Elements nflElements)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -77,7 +77,7 @@ public class ExcelBuilder
         redStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
         sportDataSheet.setDefaultColumnStyle(0, leftStyle);
         sportDataSheet.setDefaultColumnStyle(1, centerStyle);
-        sportDataSheet.createRow(eventIndex);
+        sportDataSheet.createRow(excelRowIndex);
         thisMatchupDate = gameDatesMap.get(dataEventID);
         atsHome = atsHomesMap.get(dataEventID);
         atsAway = atsAwaysMap.get(dataEventID);
@@ -88,136 +88,127 @@ public class ExcelBuilder
         cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("MMMM dd, yyyy"));
         dataEventIdElements = nflElements.select("[data-event-id='" + dataEventID + "']");
         bet365DataGameElements = soupOddsElements.select("[data-book='bet365'][data-game='" + dataGame + "']");
-        sportDataSheet.autoSizeColumn(0);//Time stamp e.g. 2022/08/14 20:28:42
-        sportDataSheet.getRow(eventIndex).createCell(0);//Time stamp
-        sportDataSheet.getRow(eventIndex).getCell(0).setCellStyle(leftStyle);
+
+        sportDataSheet.autoSizeColumn(0);//Time stamp e.g. 2022/08/14 20:28:42 Column A 1
+        sportDataSheet.getRow(excelRowIndex).createCell(0);//Time stamp
+        sportDataSheet.getRow(excelRowIndex).getCell(0).setCellStyle(leftStyle);
         sportDataSheet.getRow(0).getCell(0).setCellValue(time);
+
         thisMatchupDate = dataEventIdElements.select(".cmg_matchup_header_date").text().split(",")[1];
-        sportDataSheet.autoSizeColumn(1);//Matchup up date e.g. 2022-09-11
-        sportDataSheet.getRow(eventIndex).createCell(1);
-        sportDataSheet.getRow(eventIndex).getCell(1).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(1).setCellValue(thisMatchupDate);
-        sportDataSheet.autoSizeColumn(2);
-        sportDataSheet.getRow(eventIndex).createCell(2);//Season e.g. 2022
-        sportDataSheet.getRow(eventIndex).getCell(2).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(2).setCellValue(season);
-        sportDataSheet.autoSizeColumn(3);
-        sportDataSheet.getRow(eventIndex).createCell(3);//Week number e.g.4
-        sportDataSheet.getRow(eventIndex).getCell(3).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(3).setCellValue(weekNumber);
-        sportDataSheet.autoSizeColumn(4);
+        sportDataSheet.autoSizeColumn(1);//Matchup up date e.g. Aug. 20 Column B2
+        sportDataSheet.getRow(excelRowIndex).createCell(1);
+        sportDataSheet.getRow(excelRowIndex).getCell(1).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(1).setCellValue(thisMatchupDate);
+
+        sportDataSheet.autoSizeColumn(2);//Season e.g. 2022 Column C 3
+        sportDataSheet.getRow(excelRowIndex).createCell(2);
+        sportDataSheet.getRow(excelRowIndex).getCell(2).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(2).setCellValue(season);
+
+        sportDataSheet.autoSizeColumn(3);//Week number e.g.4 Column D 4
+        sportDataSheet.getRow(excelRowIndex).createCell(3);
+        sportDataSheet.getRow(excelRowIndex).getCell(3).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(3).setCellValue(weekNumber);
+
+        sportDataSheet.autoSizeColumn(4);//Calendar month e.g. Sep. Column E 5
         String calendarMonth = dataEventIdElements.select("div.cmg_matchup_header_date").text().split(" ")[1];
-        sportDataSheet.getRow(eventIndex).createCell(4);//Month e.g. Sep
-        sportDataSheet.getRow(eventIndex).getCell(4).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(4).setCellValue(calendarMonth);
-        sportDataSheet.autoSizeColumn(5);
+        sportDataSheet.getRow(excelRowIndex).createCell(4);//Month e.g. Sep
+        sportDataSheet.getRow(excelRowIndex).getCell(4).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(4).setCellValue(calendarMonth);
+
+        sportDataSheet.autoSizeColumn(5);// Calendar day e.g. Sunday Column F 6
         String calendarDay = dataEventIdElements.select("div.cmg_matchup_header_date").text().split(",")[0];
-        Cell dateCell = sportDataSheet.getRow(eventIndex).createCell(5);//Day of the week e.g. Monday
-        sportDataSheet.getRow(eventIndex).getCell(5).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(5).setCellValue(calendarDay);
-        sportDataSheet.autoSizeColumn(10);
-        homeNickname = dataEventIdElements.attr("data-home-team-nickname-search");
+        sportDataSheet.getRow(excelRowIndex).createCell(5);//Day of the week e.g. Monday
+        sportDataSheet.getRow(excelRowIndex).getCell(5).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(5).setCellValue(calendarDay);
+
+        sportDataSheet.autoSizeColumn(10);// Home team city + nickname e.g. Seattle Seahawks Column K 11
         homeCity = dataEventIdElements.attr("data-home-team-city-search");
-        sportDataSheet.getRow(eventIndex).createCell(10);//Home team + nickname e.g. Dallas Coyboys
-        sportDataSheet.getRow(eventIndex).getCell(10).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(10).setCellValue(homeCity + " " + homeNickname);
+        homeNickname = dataEventIdElements.attr("data-home-team-nickname-search");
+        sportDataSheet.getRow(excelRowIndex).createCell(10);//Home team + nickname e.g. Dallas Coyboys
+        sportDataSheet.getRow(excelRowIndex).getCell(10).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(10).setCellValue(homeCity + " " + homeNickname);
 
-        sportDataSheet.autoSizeColumn(11);
+        sportDataSheet.autoSizeColumn(11);// Team short name e.g. DAL Column L 12
         homeTeamShortName = dataEventIdElements.attr("data-home-team-shortname-search");//Home team abbreviation e.g. LAR
-        sportDataSheet.getRow(eventIndex).createCell(11);
-        sportDataSheet.getRow(eventIndex).getCell(11).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(11).setCellValue(homeTeamShortName);
-
-
-
-
+        sportDataSheet.getRow(excelRowIndex).createCell(11);
+        sportDataSheet.getRow(excelRowIndex).getCell(11).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(11).setCellValue(homeTeamShortName);
 
         sportDataSheet.autoSizeColumn(13);//Data EventId/DataGame column M 13
-        sportDataSheet.getRow(eventIndex).createCell(12);
-        sportDataSheet.getRow(eventIndex).getCell(12).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(12).setCellValue(dataEventID + "/" + dataGame);
+        sportDataSheet.getRow(excelRowIndex).createCell(12);
+        sportDataSheet.getRow(excelRowIndex).getCell(12).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(12).setCellValue(dataEventID + "/" + dataGame);
 
-
-
-
-        sportDataSheet.autoSizeColumn(13);//Home spread open odds column N 14*******************
+        sportDataSheet.autoSizeColumn(13);//Home spread open odds e.g. +3.5 column N 14
         homeSpreadOpenOdds = bet365DataGameElements.select("[data-type='spread']").text().split(" ")[6];
-        sportDataSheet.getRow(eventIndex).createCell(13);
-        sportDataSheet.getRow(eventIndex).getCell(13).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(13).setCellValue(homeSpreadOpenOdds);
-        System.out.println("EB148========================HomeSpreadOpen => " + homeSpreadOpenOdds);
+        sportDataSheet.getRow(excelRowIndex).createCell(13);
+        sportDataSheet.getRow(excelRowIndex).getCell(13).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(13).setCellValue(homeSpreadOpenOdds);
 
-        sportDataSheet.autoSizeColumn(14);//bet365 Home spread close odds column O 15**************
+        sportDataSheet.autoSizeColumn(14);//bet365 Home spread close odds e.g. -2.5 column O 15
         homeSpreadCloseOdds = bet365DataGameElements.select("[data-type='spread'] div.__homeOdds .__decimal").text().split(" ")[0];
-        sportDataSheet.getRow(eventIndex).createCell(14);
-        sportDataSheet.getRow(eventIndex).getCell(14).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(14).setCellValue(homeSpreadCloseOdds);
+        sportDataSheet.getRow(excelRowIndex).createCell(14);
+        sportDataSheet.getRow(excelRowIndex).getCell(14).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(14).setCellValue(homeSpreadCloseOdds);
 
-        sportDataSheet.autoSizeColumn(18);//bet365 Home moneyline close odds column S 19**********
+        sportDataSheet.autoSizeColumn(18);//bet365 Home moneyline close odds e.g +235 column S 19
         homeMoneylineCloseOdds = bet365DataGameElements.select("[data-type='moneyline'] .__homeOdds .__american").text();
-        sportDataSheet.getRow(eventIndex).createCell(18);
-        sportDataSheet.getRow(eventIndex).getCell(18).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(18).setCellValue(homeMoneylineCloseOdds);
-        sportDataSheet.autoSizeColumn(17);
-        sportDataSheet.getRow(eventIndex).createCell(17);//MoneyLine Bet365 home odds, column R
-        sportDataSheet.getRow(eventIndex).getCell(17).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(17).setCellValue(homeMoneyLineOddsMap.get(dataEventID));
-        sportDataSheet.autoSizeColumn(25);
-        awayNickname = dataEventIdElements.attr("data-away-team-nickname-search");
+        sportDataSheet.getRow(excelRowIndex).createCell(18);
+        sportDataSheet.getRow(excelRowIndex).getCell(18).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(18).setCellValue(homeMoneylineCloseOdds);
+
+        sportDataSheet.autoSizeColumn(25);//Away team city + nickname e.g. Jacksonville Jaguars Column Z 26
         awayCity = dataEventIdElements.attr("data-away-team-city-search");
-        sportDataSheet.getRow(eventIndex).createCell(25);//Away team + nickname e.g. Dallas Coyboys
-        sportDataSheet.getRow(eventIndex).getCell(25).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(25).setCellValue(awayCity + " " + awayNickname);
-        String homeTeamPlusNickname = homeCity + " " + homeNickname;
-        String awayTeamPlusNickname = awayCity + " " + awayNickname;
-        gameIdentifier = season + " - " + awayTeamPlusNickname + " @ " + homeTeamPlusNickname;
-        sportDataSheet.getRow(eventIndex).getCell(0).setCellValue(gameIdentifier);//e.g. 2022 - Washington Football Team @ Dallas Cowboys
-        sportDataSheet.autoSizeColumn(26);//Away team shortName e.g. LAR
+        awayNickname = dataEventIdElements.attr("data-away-team-nickname-search");
+        String awayCityPlusNickname = awayCity + " " + awayNickname;
+        sportDataSheet.getRow(excelRowIndex).createCell(25);//Away team + nickname e.g. Dallas Coyboys
+        sportDataSheet.getRow(excelRowIndex).getCell(25).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(25).setCellValue(awayCityPlusNickname);
+
+        sportDataSheet.autoSizeColumn(26);//Away team shortName e.g. LAR Column AA 27
         awayTeamShortName = dataEventIdElements.attr("data-away-team-shortname-search");
-        sportDataSheet.getRow(eventIndex).createCell(26);
-        sportDataSheet.getRow(eventIndex).getCell(26).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(26).setCellValue(awayTeamShortName);
-
-
+        sportDataSheet.getRow(excelRowIndex).createCell(26);
+        sportDataSheet.getRow(excelRowIndex).getCell(26).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(26).setCellValue(awayTeamShortName);
 
         sportDataSheet.autoSizeColumn(28);//Away spread open Column AC 29*********
         awaySpreadOpenOdds =  bet365DataGameElements.select("[data-type='spread']").text().split(" ")[0];
-        System.out.println("EB185 ............ ASO=> " + awaySpreadOpenOdds);
-        sportDataSheet.getRow(eventIndex).createCell(28);
-        sportDataSheet.getRow(eventIndex).getCell(28).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(28).setCellValue(awaySpreadOpenOdds);
-
-
-
-
+        sportDataSheet.getRow(excelRowIndex).createCell(28);
+        sportDataSheet.getRow(excelRowIndex).getCell(28).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(28).setCellValue(awaySpreadOpenOdds);
 
         sportDataSheet.autoSizeColumn(29);//bet365 Away spread close odds column AD 30
         awaySpreadCloseOdds = bet365DataGameElements.select("[data-type='spread'] div.__awayOdds div.__american").text().split(" ")[0];//********
-        sportDataSheet.getRow(eventIndex).createCell(29);
-        sportDataSheet.getRow(eventIndex).getCell(29).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(29).setCellValue(awaySpreadCloseOdds);
+        sportDataSheet.getRow(excelRowIndex).createCell(29);
+        sportDataSheet.getRow(excelRowIndex).getCell(29).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(29).setCellValue(awaySpreadCloseOdds);
 
-        sportDataSheet.autoSizeColumn(33);//bet365 Away moneyline close odds column AH 34*************
+        sportDataSheet.autoSizeColumn(33);//bet365 Away moneyline close odds column AH 34
         awayMoneylineCloseOdds = bet365DataGameElements.select("[data-type='moneyline'] .__awayOdds .__american").text();
-        sportDataSheet.getRow(eventIndex).createCell(33);
-        sportDataSheet.getRow(eventIndex).getCell(33).setCellStyle(centerStyle);
-        sportDataSheet.getRow(eventIndex).getCell(33).setCellValue(awayMoneylineCloseOdds);
+        sportDataSheet.getRow(excelRowIndex).createCell(33);
+        sportDataSheet.getRow(excelRowIndex).getCell(33).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(33).setCellValue(awayMoneylineCloseOdds);
+
         sportDataSheet.autoSizeColumn(59);
-        sportDataSheet.getRow(eventIndex).createCell(59);
-        sportDataSheet.getRow(eventIndex).getCell(59).setCellStyle(myStyle);
-        sportDataSheet.getRow(eventIndex).getCell(59).setCellValue(atsHome);
+        sportDataSheet.getRow(excelRowIndex).createCell(59);
+        sportDataSheet.getRow(excelRowIndex).getCell(59).setCellStyle(myStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(59).setCellValue(atsHome);
+
         sportDataSheet.autoSizeColumn(61);
-        sportDataSheet.getRow(eventIndex).createCell(61);
-        sportDataSheet.getRow(eventIndex).getCell(61).setCellStyle(myStyle);
-        sportDataSheet.getRow(eventIndex).getCell(61).setCellValue(atsAway);
+        sportDataSheet.getRow(excelRowIndex).createCell(61);
+        sportDataSheet.getRow(excelRowIndex).getCell(61).setCellStyle(myStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(61).setCellValue(atsAway);
+
         sportDataSheet.autoSizeColumn(64);
-        sportDataSheet.getRow(eventIndex).createCell(64);
-        sportDataSheet.getRow(eventIndex).getCell(64).setCellStyle(myStyle);
-        sportDataSheet.getRow(eventIndex).getCell(64).setCellValue(ouOver);
+        sportDataSheet.getRow(excelRowIndex).createCell(64);
+        sportDataSheet.getRow(excelRowIndex).getCell(64).setCellStyle(myStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(64).setCellValue(ouOver);
+
         sportDataSheet.autoSizeColumn(66);
-        sportDataSheet.getRow(eventIndex).createCell(66);
-        sportDataSheet.getRow(eventIndex).getCell(66).setCellStyle(myStyle);
-        sportDataSheet.getRow(eventIndex).getCell(66).setCellValue(ouUnder);
+        sportDataSheet.getRow(excelRowIndex).createCell(66);
+        sportDataSheet.getRow(excelRowIndex).getCell(66).setCellStyle(myStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(66).setCellValue(ouUnder);
         return sportDataWorkbook;
     }
     public void setGameDatesMap(HashMap<String, String> gameDatesMap)
@@ -244,44 +235,10 @@ public class ExcelBuilder
     {
         this.gameIdentifier = gameIdentifier;
     }
-    public void setHomeMLOddsMap(HashMap<String, String> homeMLOddsMap)
-    {
-        this.homeMLOddsMap = homeMLOddsMap;
-    }
-    public void setMoneyLineOdds(String moneyLineOdds, String dataEventId)
-    {
-    }
-    public void setSpreadOdds(String spreadOdds, String dataEventId)
-    {
-        String[] spreadOddsArray = spreadOdds.split(" ");
-        if (spreadOddsArray.length > 0)
-        {
-            awaySpreadCloseOdds = spreadOddsArray[0];
-            awaySpreadOddsMap.put(dataEventId, awayMoneyLineOdds);
-            homeSpreadOdds = spreadOddsArray[1];
-            homeSpreadOddsMap.put(dataEventId, homeMoneyLineOdds);
-
-        }
-    }
     public void setSeason(String season)
     {
         this.season = season;
     }
-    public void setWeekNumber(String weekNumber)
-    {
-        this.weekNumber = weekNumber;
-    }
-    public String getGameIdentifier()
-    {
-        return gameIdentifier;
-    }
-    public String getThisMatchupDate()
-    {
-        return thisMatchupDate;
-    }
-    public Elements getBet365DataGameElements()
-    {
-        return bet365DataGameElements;
-    }
+    public void setWeekNumber(String weekNumber) {this.weekNumber = weekNumber;}
 }
 

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220816 Good luck adding odds...">
+    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220817 Getting 15 columns...Can't always match up with covers website...not sure why">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" afterDir="false" />
@@ -96,7 +96,9 @@
       <workItem from="1660751423164" duration="6986000" />
       <workItem from="1660760948052" duration="1478000" />
       <workItem from="1660772010853" duration="803000" />
-      <workItem from="1660772822940" duration="7560000" />
+      <workItem from="1660772822940" duration="8154000" />
+      <workItem from="1660789501706" duration="291000" />
+      <workItem from="1660789861811" duration="3581000" />
     </task>
     <task id="LOCAL-00001" summary="version 220814...combo working">
       <created>1660436446941</created>
@@ -161,7 +163,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660676534768</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="version 220817 Getting 15 columns...Can't always match up with covers website...not sure why">
+      <created>1660785614278</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1660785614278</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -187,6 +196,7 @@
     <MESSAGE value="version 220814D Major clean up...rewmoved lots of dead code." />
     <MESSAGE value="version 220815 Added first odds...bet365, moneyline, away, closed" />
     <MESSAGE value="version 220816 Good luck adding odds..." />
-    <option name="LAST_COMMIT_MESSAGE" value="version 220816 Good luck adding odds..." />
+    <MESSAGE value="version 220817 Getting 15 columns...Can't always match up with covers website...not sure why" />
+    <option name="LAST_COMMIT_MESSAGE" value="version 220817 Getting 15 columns...Can't always match up with covers website...not sure why" />
   </component>
 </project>

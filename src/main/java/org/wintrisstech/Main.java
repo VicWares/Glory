@@ -1,7 +1,7 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220817
+ * version Glory 220817A
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 public class Main
 {
-    private static final String VERSION = "220817";
+    private static final String VERSION = "220817A";
     private XSSFWorkbook sportDataWorkbook;
     private HashMap<String, String> weekDateMap = new HashMap<>();
     private HashMap<String, String> cityNameMap = new HashMap<>();
@@ -25,7 +25,7 @@ public class Main
     public DataCollector dataCollector = new DataCollector();
     public WebSiteReader websiteReader;
     private org.jsoup.select.Elements consensusElements;
-    private int globalMatchupIndex = 3;
+    private int excelRowIndex = 3;
     private String dataGame;
     private String season = "2022";
     private Elements bet365Elements;
@@ -71,9 +71,9 @@ public class Main
             excelBuilder.setOuOversMap(dataCollector.getOuOversMap());
             excelBuilder.setOuUndersMap(dataCollector.getOuUndersMap());
             excelBuilder.setGameIdentifier(dataCollector.getGameIdentifierMap().get(dataEventId));
-            excelBuilder.buildExcel(sportDataWorkbook, dataEventId, dataGame, globalMatchupIndex, soupOddsElements, nflElements);
+            excelBuilder.buildExcel(sportDataWorkbook, dataEventId, dataGame, excelRowIndex, soupOddsElements, nflElements);
             System.out.println("Main75=====> dataEventId " + dataEventId + " dataGame, " + dataGame + "  is " + awayTeamShortName + "/" + homeTeamShortName + "<==== dataGame " + dataGame);
-            globalMatchupIndex++;
+            excelRowIndex++;
             System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------END");
             System.out.println("777777");
         }
