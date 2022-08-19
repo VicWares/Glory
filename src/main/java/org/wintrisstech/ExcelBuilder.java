@@ -2,9 +2,8 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220818
+ * version Glory 220818A
  *******************************************************************/
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -26,7 +25,7 @@ public class ExcelBuilder
     private String ouOver;
     private String homeCity;
     private String awayTeam;
-    private String thisMatchupDate;
+    private String matchupDate;
     private String atsHome;
     private String atsAway;
     private String completeHomeTeamName;
@@ -73,34 +72,39 @@ public class ExcelBuilder
         String time = (dateFormat.format(date));
         sportDataSheet = sportDataWorkbook.getSheet("Data");
         sportDataSheet.setDefaultColumnWidth(10);
-        CellStyle leftStyle = sportDataWorkbook.createCellStyle();
         CellStyle centerStyle = sportDataWorkbook.createCellStyle();
         CellStyle myStyle = sportDataWorkbook.createCellStyle();
         XSSFCellStyle redStyle = sportDataWorkbook.createCellStyle();
         redStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
         sportDataSheet.setDefaultColumnStyle(1, centerStyle);
         sportDataSheet.createRow(excelRowIndex);
-        thisMatchupDate = gameDatesMap.get(dataEventID);
-        atsHome = atsHomesMap.get(dataEventID);
-        atsAway = atsAwaysMap.get(dataEventID);
-        ouOver = ouOversMap.get(dataEventID);
-        ouUnder = ouUndersMap.get(dataEventID);
+        matchupDate = gameDatesMap.get(dataEventID);
+//        atsHome = atsHomesMap.get(dataEventID);
+//        atsAway = atsAwaysMap.get(dataEventID);
+//        ouOver = ouOversMap.get(dataEventID);
+//        ouUnder = ouUndersMap.get(dataEventID);
         XSSFCreationHelper createHelper = sportDataWorkbook.getCreationHelper();
         XSSFCellStyle cellStyle = sportDataWorkbook.createCellStyle();
         cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("MMMM dd, yyyy"));
         dataEventIdElements = nflElements.select("[data-event-id='" + dataEventID + "']");
         bet365DataGameElements = soupOddsElements.select("[data-book='bet365'][data-game='" + dataGame + "']");
 
-        sportDataSheet.autoSizeColumn(0);//Time stamp e.g. 2022/08/14 20:28:42 Column A 1
+        sportDataSheet.autoSizeColumn(0);//Time stamp e.g. 2022/08/14 20:28:42 Column A 1 Row 0 only
         sportDataSheet.getRow(excelRowIndex).createCell(0);//Time stamp
         sportDataSheet.getRow(excelRowIndex).getCell(0).setCellStyle(centerStyle);
         sportDataSheet.getRow(0).getCell(0).setCellValue(time);
 
-        thisMatchupDate = dataEventIdElements.select(".cmg_matchup_header_date").text().split(",")[1];
+        gameIdentifier = season + " - " + awayCity + " " + awayNickname +" @ " + homeCity + " " + homeNickname;//Game identifier e.g. 2022 - Buffalo Bills @ Los Angeles Rams Column A 1
+        sportDataSheet.autoSizeColumn(0);//Matchup up date e.g. Aug. 20 Column B2
+        sportDataSheet.getRow(excelRowIndex).createCell(0);
+        sportDataSheet.getRow(excelRowIndex).getCell(0).setCellStyle(centerStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(0).setCellValue(gameIdentifier);
+
+        matchupDate = dataEventIdElements.select(".cmg_matchup_header_date").text().split(",")[1];
         sportDataSheet.autoSizeColumn(1);//Matchup up date e.g. Aug. 20 Column B2
         sportDataSheet.getRow(excelRowIndex).createCell(1);
         sportDataSheet.getRow(excelRowIndex).getCell(1).setCellStyle(centerStyle);
-        sportDataSheet.getRow(excelRowIndex).getCell(1).setCellValue(thisMatchupDate);
+        sportDataSheet.getRow(excelRowIndex).getCell(1).setCellValue(matchupDate);
 
         sportDataSheet.autoSizeColumn(2);//Season e.g. 2022 Column C 3
         sportDataSheet.getRow(excelRowIndex).createCell(2);
@@ -127,7 +131,7 @@ public class ExcelBuilder
         sportDataSheet.autoSizeColumn(10);// Home team city + nickname e.g. Seattle Seahawks Column K 11
         homeCity = dataEventIdElements.attr("data-home-team-city-search");
         homeCity = cityNameMap.get(homeCity);
-        System.out.println("..............home city => " + homeCity + " ...........away city => " + awayCity);
+        System.out.println("EB128..............home city => " + homeCity + " ...........away city => " + awayCity + " ............matchup date => " + matchupDate + " " + season);
         homeNickname = dataEventIdElements.attr("data-home-team-nickname-search");
         sportDataSheet.getRow(excelRowIndex).createCell(10);//Home team + nickname e.g. Dallas Coyboys
         sportDataSheet.getRow(excelRowIndex).getCell(10).setCellStyle(centerStyle);
@@ -145,7 +149,7 @@ public class ExcelBuilder
         sportDataSheet.getRow(excelRowIndex).getCell(12).setCellValue(dataEventID + "/" + dataGame);
 
         sportDataSheet.autoSizeColumn(13);//Home spread open odds e.g. +3.5 column N 14
-        homeSpreadOpenOdds = bet365DataGameElements.select("[data-type='spread']").text().split(" ")[6];
+       // homeSpreadOpenOdds = bet365DataGameElements.select("[data-type='spread']").text().split(" ")[6];
         sportDataSheet.getRow(excelRowIndex).createCell(13);
         sportDataSheet.getRow(excelRowIndex).getCell(13).setCellStyle(centerStyle);
         sportDataSheet.getRow(excelRowIndex).getCell(13).setCellValue(homeSpreadOpenOdds);
@@ -228,9 +232,6 @@ public class ExcelBuilder
         sportDataSheet.getRow(excelRowIndex).createCell(68);
         sportDataSheet.getRow(excelRowIndex).getCell(68).setCellStyle(myStyle);
         sportDataSheet.getRow(excelRowIndex).getCell(68).setCellValue(ouUnder);
-
-
-
 
         return sportDataWorkbook;
     }

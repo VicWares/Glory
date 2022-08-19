@@ -1,7 +1,7 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220818
+ * version Glory 220818A
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
@@ -13,9 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 public class Main
 {
-    private static final String VERSION = "220817A";
+    private static final String VERSION = "220818A";
     private XSSFWorkbook sportDataWorkbook;
     private HashMap<String, String> weekDateMap = new HashMap<>();
+    private HashMap<String, String> weekDateMap2 = new HashMap<>();
     private HashMap<String, String> cityNameMap = new HashMap<>();
     private HashMap<String, String> xRefMap = new HashMap<>();
     private WebSiteReader webSiteReader = new WebSiteReader();
@@ -27,7 +28,6 @@ public class Main
     private org.jsoup.select.Elements consensusElements;
     private int excelRowIndex = 3;
     private String dataGame;
-    private String season = "2022";
     private Elements bet365Elements;
     private String homeTeamShortName;
     private String awayTeamShortName;
@@ -39,10 +39,15 @@ public class Main
     }
     private void getGoing() throws IOException, InterruptedException
     {
-        excelBuilder.setSeason(season);
         websiteReader = new WebSiteReader();
-        fillCityNameMap();
-        fillWeekNumberMap();
+        {
+            fillCityNameMap();//2022-2023 season
+            excelBuilder.setSeason("2022");
+        }
+//        {
+//        fillWeekDateMap2();//2021-2022 season
+//        excelBuilder.setSeason("2021");
+//        }
         excelBuilder.setCityNameMap(cityNameMap);
         String weekNumber = JOptionPane.showInputDialog("Enter NFL week number");
         weekNumber = "1";//For testing
@@ -53,7 +58,7 @@ public class Main
         org.jsoup.select.Elements weekElements = nflElements.select(".cmg_game_data, .cmg_matchup_game_box");//Lots of good stuff in this Element: team name, team city...
         xRefMap = buildXref(weekElements);//Key is data-event-ID e.g 87579, Value is data-game e.g 265282, two different ways of selecting the same matchup (game)
         System.out.println(xRefMap);
-        System.out.println("Main48 week number => " + weekNumber + ", week date => " + weekDate + ", " + weekElements.size() + " games this week");
+        System.out.println("Main57 week number => " + weekNumber + ", week date => " + weekDate + ", " + weekElements.size() + " games this week");
         sportDataWorkbook = excelReader.readSportData();
         System.out.println("Main52 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BEGIN MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
         for (Map.Entry<String, String> entry : xRefMap.entrySet())
@@ -63,15 +68,15 @@ public class Main
             dataGame = xRefMap.get(dataEventId);
             awayTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-away-team-shortname-search");
             homeTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-home-team-shortname-search");
-            System.out.println("Main63, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + awayTeamShortName + "/" + homeTeamShortName);
-            consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails/dc2b41af-f52f-4e17-b0b1-ac2900676797?showExperts=" + "87585");
+            System.out.println("Main67, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + awayTeamShortName + "/" + homeTeamShortName);
+            consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails/dc2b41af-f52f-4e17-b0b1-ac2900676797?showExperts=" + dataEventId);
             dataCollector.collectConsensusData(consensusElements, dataEventId);
             excelBuilder.setConsensusElements(consensusElements);
-            excelBuilder.setGameDatesMap(dataCollector.getGameDatesMap());
-            excelBuilder.setAtsHomesMap(dataCollector.getAtsHomesMap());
-            excelBuilder.setAtsAwaysMap(dataCollector.getAtsAwaysMap());
-            excelBuilder.setOuOversMap(dataCollector.getOuOversMap());
-            excelBuilder.setOuUndersMap(dataCollector.getOuUndersMap());
+//            excelBuilder.setGameDatesMap(dataCollector.getGameDatesMap());
+//            excelBuilder.setAtsHomesMap(dataCollector.getAtsHomesMap());
+//            excelBuilder.setAtsAwaysMap(dataCollector.getAtsAwaysMap());
+//            excelBuilder.setOuOversMap(dataCollector.getOuOversMap());
+//            excelBuilder.setOuUndersMap(dataCollector.getOuUndersMap());
             excelBuilder.setGameIdentifier(dataCollector.getGameIdentifierMap().get(dataEventId));
             excelBuilder.buildExcel(sportDataWorkbook, dataEventId, dataGame, excelRowIndex, soupOddsElements, nflElements);
             System.out.println("Main75=====> dataEventId " + dataEventId + " dataGame, " + dataGame + "  is " + awayTeamShortName + "/" + homeTeamShortName + "<==== dataGame " + dataGame);
@@ -141,9 +146,9 @@ public class Main
         cityNameMap.put("San Francisco", "San Francisco");//San Francisco 49ers
         cityNameMap.put("Seattle", "Seattle");//Seattle Seahawks
     }
-    private void fillWeekNumberMap()
+    private void fillWeekDateMap()
     {
-        weekDateMap.put("1", "2022-09-08");//Season start...Week 1
+        weekDateMap.put("1", "2022-09-08");//Season 2022 start...Week 1
         weekDateMap.put("2", "2022-09-15");
         weekDateMap.put("3", "2022-09-22");
         weekDateMap.put("4", "2022-09-29");
@@ -162,5 +167,26 @@ public class Main
         weekDateMap.put("17", "2022-12-29");
         weekDateMap.put("18", "2023-01-08");
         weekDateMap.put("19", "2023-02-05");
+    }
+    private void fillWeekDateMap2()//2021 season for testing
+    {
+        weekDateMap.put("1", "2021-09-09");//Season 2021 start...Week 1
+        weekDateMap.put("2", "2022-09-16");
+        weekDateMap.put("3", "2021-09-23");
+        weekDateMap.put("4", "2021-09-30");
+        weekDateMap.put("5", "2021-10-07");
+        weekDateMap.put("6", "2021-10-14");
+        weekDateMap.put("7", "2021-10-21");
+        weekDateMap.put("8", "2021-10-28");
+        weekDateMap.put("9", "2021-11-04");
+        weekDateMap.put("10", "2021-11-11");
+        weekDateMap.put("11", "2021-11-18");
+        weekDateMap.put("12", "2021-11-25");
+        weekDateMap.put("13", "2021-12-02");
+        weekDateMap.put("14", "2021-12-09");
+        weekDateMap.put("15", "2021-12-16");
+        weekDateMap.put("16", "2021-12-23");
+        weekDateMap.put("17", "2021-01-02");
+        weekDateMap.put("18", "2022-01-08");
     }
 }
