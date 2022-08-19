@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220818A
+ * version Glory 220819
  * Builds data event id array and calendar date array
  *******************************************************************/
 import org.jsoup.nodes.Element;
