@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220817A
+ * version Glory 220818
  *******************************************************************/
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -51,6 +51,7 @@ public class ExcelBuilder
     private HashMap<String, String> awayMoneyLineOddsMap = new HashMap<>();
     private HashMap<String, String> homeSpreadOddsMap = new HashMap<>();
     private HashMap<String, String> awaySpreadOddsMap = new HashMap<>();
+    private HashMap<String, String> cityNameMap = new HashMap<>();
     private String awayCity;
     private String homeTeamShortName;
     private String awayTeamShortName;
@@ -59,10 +60,12 @@ public class ExcelBuilder
     private String homeSpreadOpenOdds;
     private String homeSpreadCloseOdds;
     private String awayMoneylineCloseOdds;
-    private Elements xx;
     private Elements dataEventIdElements;
     private Elements bet365DataGameElements;
     private String awaySpreadOpenOdds;
+    private String awaySpreadConsensus;
+    private String homeSpreadConsensus;
+    private Elements consensusElements;
     public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, String dataGame , int excelRowIndex, Elements soupOddsElements, Elements nflElements)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -75,7 +78,6 @@ public class ExcelBuilder
         CellStyle myStyle = sportDataWorkbook.createCellStyle();
         XSSFCellStyle redStyle = sportDataWorkbook.createCellStyle();
         redStyle.setFillForegroundColor(IndexedColors.RED.getIndex());
-        sportDataSheet.setDefaultColumnStyle(0, leftStyle);
         sportDataSheet.setDefaultColumnStyle(1, centerStyle);
         sportDataSheet.createRow(excelRowIndex);
         thisMatchupDate = gameDatesMap.get(dataEventID);
@@ -91,7 +93,7 @@ public class ExcelBuilder
 
         sportDataSheet.autoSizeColumn(0);//Time stamp e.g. 2022/08/14 20:28:42 Column A 1
         sportDataSheet.getRow(excelRowIndex).createCell(0);//Time stamp
-        sportDataSheet.getRow(excelRowIndex).getCell(0).setCellStyle(leftStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(0).setCellStyle(centerStyle);
         sportDataSheet.getRow(0).getCell(0).setCellValue(time);
 
         thisMatchupDate = dataEventIdElements.select(".cmg_matchup_header_date").text().split(",")[1];
@@ -124,6 +126,8 @@ public class ExcelBuilder
 
         sportDataSheet.autoSizeColumn(10);// Home team city + nickname e.g. Seattle Seahawks Column K 11
         homeCity = dataEventIdElements.attr("data-home-team-city-search");
+        homeCity = cityNameMap.get(homeCity);
+        System.out.println("..............home city => " + homeCity + " ...........away city => " + awayCity);
         homeNickname = dataEventIdElements.attr("data-home-team-nickname-search");
         sportDataSheet.getRow(excelRowIndex).createCell(10);//Home team + nickname e.g. Dallas Coyboys
         sportDataSheet.getRow(excelRowIndex).getCell(10).setCellStyle(centerStyle);
@@ -160,6 +164,7 @@ public class ExcelBuilder
 
         sportDataSheet.autoSizeColumn(25);//Away team city + nickname e.g. Jacksonville Jaguars Column Z 26
         awayCity = dataEventIdElements.attr("data-away-team-city-search");
+        awayCity = cityNameMap.get(awayCity);//Correct for weird Covers city names
         awayNickname = dataEventIdElements.attr("data-away-team-nickname-search");
         String awayCityPlusNickname = awayCity + " " + awayNickname;
         sportDataSheet.getRow(excelRowIndex).createCell(25);//Away team + nickname e.g. Dallas Coyboys
@@ -209,6 +214,24 @@ public class ExcelBuilder
         sportDataSheet.getRow(excelRowIndex).createCell(66);
         sportDataSheet.getRow(excelRowIndex).getCell(66).setCellStyle(myStyle);
         sportDataSheet.getRow(excelRowIndex).getCell(66).setCellValue(ouUnder);
+
+        sportDataSheet.autoSizeColumn(67);// Away spread consensus BP 68
+        awaySpreadConsensus = consensusElements.select("div.covers-CoversConsensusDetailsTable-away div.covers-CoversConsensusDetailsTable-awayWagers").text();
+        System.out.println("awayCponsensus.................." + awaySpreadConsensus);
+        sportDataSheet.getRow(excelRowIndex).createCell(67);
+        sportDataSheet.getRow(excelRowIndex).getCell(67).setCellStyle(myStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(67).setCellValue(ouUnder);
+
+        sportDataSheet.autoSizeColumn(68);// Homespread consensus BQ 69
+        homeSpreadConsensus = consensusElements.select("div.covers-CoversConsensusDetailsTable-homeWagers").text();
+        System.out.println("homeconsensus..................." + homeSpreadConsensus);
+        sportDataSheet.getRow(excelRowIndex).createCell(68);
+        sportDataSheet.getRow(excelRowIndex).getCell(68).setCellStyle(myStyle);
+        sportDataSheet.getRow(excelRowIndex).getCell(68).setCellValue(ouUnder);
+
+
+
+
         return sportDataWorkbook;
     }
     public void setGameDatesMap(HashMap<String, String> gameDatesMap)
@@ -240,5 +263,8 @@ public class ExcelBuilder
         this.season = season;
     }
     public void setWeekNumber(String weekNumber) {this.weekNumber = weekNumber;}
+    public void setCityNameMap(HashMap<String, String> cityNameMap) {this.cityNameMap = cityNameMap;}
+    public void setConsensusElements(Elements consensusElements)
+    {this.consensusElements = consensusElements;}
 }
 

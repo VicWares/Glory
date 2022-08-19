@@ -1,7 +1,7 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220817A
+ * version Glory 220818
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
@@ -43,6 +43,7 @@ public class Main
         websiteReader = new WebSiteReader();
         fillCityNameMap();
         fillWeekNumberMap();
+        excelBuilder.setCityNameMap(cityNameMap);
         String weekNumber = JOptionPane.showInputDialog("Enter NFL week number");
         weekNumber = "1";//For testing
         excelBuilder.setWeekNumber(weekNumber);
@@ -63,8 +64,9 @@ public class Main
             awayTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-away-team-shortname-search");
             homeTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-home-team-shortname-search");
             System.out.println("Main63, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + awayTeamShortName + "/" + homeTeamShortName);
-            consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails?externalId=%2fsport%2ffootball%2fcompetition%3a" + dataEventId);
+            consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails/dc2b41af-f52f-4e17-b0b1-ac2900676797?showExperts=" + "87585");
             dataCollector.collectConsensusData(consensusElements, dataEventId);
+            excelBuilder.setConsensusElements(consensusElements);
             excelBuilder.setGameDatesMap(dataCollector.getGameDatesMap());
             excelBuilder.setAtsHomesMap(dataCollector.getAtsHomesMap());
             excelBuilder.setAtsAwaysMap(dataCollector.getAtsAwaysMap());
@@ -160,9 +162,5 @@ public class Main
         weekDateMap.put("17", "2022-12-29");
         weekDateMap.put("18", "2023-01-08");
         weekDateMap.put("19", "2023-02-05");
-    }
-    public WebSiteReader getWebSiteReader()
-    {
-        return webSiteReader;
     }
 }
