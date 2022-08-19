@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220818A Clean up added game identifier column back...was lost">
+    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220819 Clean up...add setSportDataSheet() method in Excel Builder">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +103,8 @@
       <workItem from="1660858931934" duration="4205000" />
       <workItem from="1660872369206" duration="8096000" />
       <workItem from="1660880722530" duration="1997000" />
-      <workItem from="1660923259394" duration="9831000" />
+      <workItem from="1660923259394" duration="10115000" />
+      <workItem from="1660941638346" duration="5902000" />
     </task>
     <task id="LOCAL-00001" summary="version 220814...combo working">
       <created>1660436446941</created>
@@ -197,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660882332484</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="version 220819 Clean up...add setSportDataSheet() method in Excel Builder">
+      <created>1660933357040</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1660933357047</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,6 +234,7 @@
     <MESSAGE value="version 220817A Cleanup lost game identifier, Column A 1" />
     <MESSAGE value="version 220818C Getting consensus data for money leaders...can't match up with teams..." />
     <MESSAGE value="version 220818A Clean up added game identifier column back...was lost" />
-    <option name="LAST_COMMIT_MESSAGE" value="version 220818A Clean up added game identifier column back...was lost" />
+    <MESSAGE value="version 220819 Clean up...add setSportDataSheet() method in Excel Builder" />
+    <option name="LAST_COMMIT_MESSAGE" value="version 220819 Clean up...add setSportDataSheet() method in Excel Builder" />
   </component>
 </project>

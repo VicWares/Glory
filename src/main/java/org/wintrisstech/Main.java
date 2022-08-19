@@ -1,12 +1,11 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220819
+ * version Glory 220819A
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
@@ -72,11 +71,6 @@ public class Main
             consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails/dc2b41af-f52f-4e17-b0b1-ac2900676797?showExperts=" + dataEventId);
             dataCollector.collectConsensusData(consensusElements, dataEventId);
             excelBuilder.setConsensusElements(consensusElements);
-//            excelBuilder.setGameDatesMap(dataCollector.getGameDatesMap());
-//            excelBuilder.setAtsHomesMap(dataCollector.getAtsHomesMap());
-//            excelBuilder.setAtsAwaysMap(dataCollector.getAtsAwaysMap());
-//            excelBuilder.setOuOversMap(dataCollector.getOuOversMap());
-//            excelBuilder.setOuUndersMap(dataCollector.getOuUndersMap());
             excelBuilder.setGameIdentifier(dataCollector.getGameIdentifierMap().get(dataEventId));
             excelBuilder.buildExcel(sportDataWorkbook, dataEventId, dataGame, excelRowIndex, soupOddsElements, nflElements);
             System.out.println("Main75=====> dataEventId " + dataEventId + " dataGame, " + dataGame + "  is " + awayTeamShortName + "/" + homeTeamShortName + "<==== dataGame " + dataGame);

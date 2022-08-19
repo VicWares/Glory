@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220819
+ * version Glory 220819A
  *******************************************************************/
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -66,6 +66,16 @@ public class ExcelBuilder
     private Elements consensusElements;
     private String calendarMonth;
     private String calendarDay;
+    private String consensusSpreadAway;
+    private String consensusSpreadHome;
+    private String consnsusOUunderAway;
+    private String consnsusOUunderHome;
+    private String consnsusOverUunderHome;
+    private String consnsusOverUunderAway;
+    private String consensusMoneyLeaderSpreadHome;
+    private String consensusMoneyLeaderSpreadAway;
+    private String consnsusMoneyLeaderOverUnderAway;
+    private String consnsusMoneyLeaderOverUnderHome;
     public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, String dataGame , int excelRowIndex, Elements soupOddsElements, Elements nflElements)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -119,15 +129,14 @@ public class ExcelBuilder
         setSportDataSheet(excelRowIndex, 29, awaySpreadCloseOdds);//bet365 Away spread close odds column AD 30
         awayMoneylineCloseOdds = bet365DataGameElements.select("[data-type='moneyline'] .__awayOdds .__american").text();
         setSportDataSheet(excelRowIndex, 30, awayMoneylineCloseOdds);//bet365 Away spread close odds column AD 30
-        setSportDataSheet(excelRowIndex, 59, atsHome);//FIX THIS
-        setSportDataSheet(excelRowIndex, 61, atsAway);//FIX THIS
-        setSportDataSheet(excelRowIndex, 64, ouOver);//FIX THIS
-        setSportDataSheet(excelRowIndex, 66, ouUnder);//FIX THIS
-        awaySpreadConsensus = consensusElements.select("div.covers-CoversConsensusDetailsTable-away div.covers-CoversConsensusDetailsTable-awayWagers").text();
-        setSportDataSheet(excelRowIndex, 67, awaySpreadConsensus);// Away spread consensus BP 68
+        consensusSpreadAway = consensusElements.select("div.covers-CoversConsensusDetailsTable-row:nth-child(11) > div:nth-child(3) > div:nth-child(1)").text();
+        setSportDataSheet(excelRowIndex, 64, consensusSpreadAway);//Consensus spread away column BM 65
+        setSportDataSheet(excelRowIndex, 66, consensusSpreadHome);//Consesus Spread home column BO 67
+        setSportDataSheet(excelRowIndex, 67, consensusMoneyLeaderSpreadAway);//Consesus Money Leaders Spread home column BP 68
+        setSportDataSheet(excelRowIndex, 73, consnsusMoneyLeaderOverUnderAway);//Consensus Money Leader o/u under home column column BV 74
+        setSportDataSheet(excelRowIndex, 74, consnsusMoneyLeaderOverUnderHome);//Consensus o/u under home column column BW 75
         homeSpreadConsensus = consensusElements.select("div.covers-CoversConsensusDetailsTable-homeWagers").text();// Homespread consensus BQ 69
-        setSportDataSheet(excelRowIndex, 68, homeSpreadConsensus);
-        System.out.println("EB136..............home city => " + homeCity + " ...........away city => " + awayCity + " ............matchup date => " + matchupDate + " " + season);
+        System.out.println("EB130..............home city => " + homeCity + " ...........away city => " + awayCity + " ............matchup date => " + matchupDate + " " + season);
         return sportDataWorkbook;
     }
     public void setSportDataSheet(int rowIndex, int column, String columnEntry)
