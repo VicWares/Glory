@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220819A
+ * version Glory 220823
  *******************************************************************/
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -111,7 +111,7 @@ public class ExcelBuilder
         setSportDataSheet(excelRowIndex, 10, homeCityPlusNickname);// Home team city + nickname e.g. Seattle Seahawks Column K 11
         homeTeamShortName = dataEventIdElements.attr("data-home-team-shortname-search");//Home team abbreviation e.g. LAR
         setSportDataSheet(excelRowIndex, 11, homeTeamShortName);// Home team short name e.g. DAL Column L 12
-        homeSpreadOpenOdds = bet365DataGameElements.select("[data-type='spread']").text().split(" ")[6];
+        //homeSpreadOpenOdds = bet365DataGameElements.select("[data-type='spread']").text().split(" ")[6];
         setSportDataSheet(excelRowIndex, 13, homeSpreadOpenOdds);//Home spread open odds e.g. +3.5 column N 14
         homeSpreadCloseOdds = bet365DataGameElements.select("[data-type='spread'] div.__homeOdds .__decimal").text().split(" ")[0];
         homeMoneylineCloseOdds = bet365DataGameElements.select("[data-type='moneyline'] .__homeOdds .__american").text();

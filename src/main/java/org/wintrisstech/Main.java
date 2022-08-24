@@ -1,7 +1,7 @@
 package org.wintrisstech;
 /****************************************
  * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220819A
+ * version Glory 220823
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 public class Main
 {
-    private static final String VERSION = "220819";
+    private static final String VERSION = "220823";
     private XSSFWorkbook sportDataWorkbook;
     private HashMap<String, String> weekDateMap = new HashMap<>();
     private HashMap<String, String> weekDateMap2 = new HashMap<>();
@@ -67,16 +67,13 @@ public class Main
             dataGame = xRefMap.get(dataEventId);
             awayTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-away-team-shortname-search");
             homeTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-home-team-shortname-search");
-            System.out.println("Main67, data-event-id=> " + dataEventId + ", data-game=> " + dataGame + ", " + awayTeamShortName + "/" + homeTeamShortName);
             consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails/dc2b41af-f52f-4e17-b0b1-ac2900676797?showExperts=" + dataEventId);
             dataCollector.collectConsensusData(consensusElements, dataEventId);
             excelBuilder.setConsensusElements(consensusElements);
             excelBuilder.setGameIdentifier(dataCollector.getGameIdentifierMap().get(dataEventId));
             excelBuilder.buildExcel(sportDataWorkbook, dataEventId, dataGame, excelRowIndex, soupOddsElements, nflElements);
-            System.out.println("Main75=====> dataEventId " + dataEventId + " dataGame, " + dataGame + "  is " + awayTeamShortName + "/" + homeTeamShortName + "<==== dataGame " + dataGame);
             excelRowIndex++;
             System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------END");
-            System.out.println("777777");
         }
         System.out.println("Main70 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
         excelWriter.openOutputStream();
