@@ -2,10 +2,10 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version 220823
+ * version 220831
  * Builds data event id array and calendar date array
  *******************************************************************/
-import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -70,51 +70,16 @@ public class DataCollector
     private String[] bet365OddsArray = new String[6];
     public HashMap<String, String> getAwayMLoddsMap() {return awayMLoddsMap;}
     public HashMap<String, String> getHomeMLoddsMap() {return awayMLoddsMap;}
-    public void collectTeamInfo(Elements thisWeekElements)//From covers.com website for this week's matchups
+    public void collectConsensusData(Document consensusDoc, String dataEventId)
     {
-        for (Element e : thisWeekElements)//Build week matchup IDs array
-        {
-            homeTeamFullName = e.attr("data-home-team-fullname-search");//e.g. Houston...correcting for different city/name usage
-            homeTeamNickname = e.attr("data-home-team-nickname-search");//e.g. Texans
-            homeTeamCity = e.attr("data-home-team-city-search");
-            homeTeamCity = cityNameMap.get(homeTeamCity);
-            homeTeamCompleteName = homeTeamCity + " " + homeTeamNickname;
-            awayTeamFullName = e.attr("data-away-team-fullname-search");//e.g. Dallas
-            awayTeamNickname = e.attr("data-away-team-nickname-search");//e.g. Cowboys
-            awayTeamCity = e.attr("data-away-team-city-search");
-            awayTeamCity = cityNameMap.get(awayTeamCity);
-            awayTeamCompleteName = awayTeamCity + " " + awayTeamNickname;
-            gameIdentifier = thisSeason + " - " + awayTeamCompleteName + " @ " + homeTeamCompleteName;
-            dataEventId = e.attr("data-event-id");
-            String[] gameDateTime = e.attr("data-game-date").split(" ");
-            gameDate = gameDateTime[0];
-            awayTeamScore = e.attr("data-away-score");
-            thisWeek = e.attr("data-competition-type");
-            thisWeekGameDates.add(gameDate);
-            gameDatesMap.put(dataEventId, gameDate);
-            gameIdentifierMap.put(dataEventId, gameIdentifier);
-            thisWeekHomeTeams.add(homeTeamCompleteName);
-            thisWeekAwayTeams.add(awayTeamCompleteName);
-            homeFullNameMap.put(dataEventId, homeTeamFullName);
-            awayFullNameMap.put(dataEventId, awayTeamFullName);
-            thisWeekHomeTeamScores.add(homeTeamScore);
-            thisWeekAwayTeamScores.add((awayTeamScore));
-            thisGameWeekNumbers.add(thisWeek);
-            String awayShortName = e.attr("data-away-team-shortname-search");//Away team
-            awayShortNameMap.put(dataEventId, awayShortName);
-            String homeShortName = e.attr("data-home-team-shortname-search");//Home team
-            homeShortNameMap.put(dataEventId, homeShortName);
-        }
-    }
-    public void collectConsensusData(Elements thisMatchupConsensus, String thisMatchupID)
-    {
-        this.dataEventId = thisMatchupID;
+        this.dataEventId = dataEventId;
         String ouOver = null;
         String ouUnder = null;
         String atsHome = null;
         String atsAway = null;
-        Elements rightConsensus = thisMatchupConsensus.select(".covers-CoversConsensusDetailsTable-finalWagersright");//Home/Under
-        Elements leftConsensus = thisMatchupConsensus.select(".covers-CoversConsensusDetailsTable-finalWagersleft");//Away/Over
+        Elements rightConsensus = consensusDoc.select(".covers-CoversConsensusDetailsTable-finalWagersright");//Home/Under
+        Elements leftConsensus = consensusDoc.select(".covers-CoversConsensusDetailsTable-finalWagersleft");//Away/Over
+        System.out.println("+++++++++++" + rightConsensus);
         try//To catch missing consensus data due to delayed or cancelled game
         {
             ouUnder = rightConsensus.select("div").get(1).text();
@@ -126,10 +91,10 @@ public class DataCollector
         {
             System.out.println("DC121 DataCollector, no consensus data for " + gameIdentifier);
         }
-        ouOversMap.put(thisMatchupID, ouOver);
-        ouUndersMap.put(thisMatchupID, ouUnder);
-        atsHomesMap.put(thisMatchupID, atsAway);
-        atsAwaysMap.put(thisMatchupID, atsHome);
+        ouOversMap.put(dataEventId, ouOver);
+        ouUndersMap.put(dataEventId, ouUnder);
+        atsHomesMap.put(dataEventId, atsAway);
+        atsAwaysMap.put(dataEventId, atsHome);
     }
     public String collectMoneylineOdds(Elements oddsElements, HashMap<String, String> xRefMap, String dataEventId)
     {

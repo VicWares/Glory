@@ -2,7 +2,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Glory 220823
+ * version Glory 220831
  *******************************************************************/
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -10,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.text.DateFormat;
@@ -63,7 +64,6 @@ public class ExcelBuilder
     private String awaySpreadOpenOdds;
     private String awaySpreadConsensus;
     private String homeSpreadConsensus;
-    private Elements consensusElements;
     private String calendarMonth;
     private String calendarDay;
     private String consensusSpreadAway;
@@ -76,6 +76,7 @@ public class ExcelBuilder
     private String consensusMoneyLeaderSpreadAway;
     private String consnsusMoneyLeaderOverUnderAway;
     private String consnsusMoneyLeaderOverUnderHome;
+    private Document consensusDoc;
     public XSSFWorkbook buildExcel(XSSFWorkbook sportDataWorkbook, String dataEventID, String dataGame , int excelRowIndex, Elements soupOddsElements, Elements nflElements)
     {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -129,13 +130,13 @@ public class ExcelBuilder
         setSportDataSheet(excelRowIndex, 29, awaySpreadCloseOdds);//bet365 Away spread close odds column AD 30
         awayMoneylineCloseOdds = bet365DataGameElements.select("[data-type='moneyline'] .__awayOdds .__american").text();
         setSportDataSheet(excelRowIndex, 30, awayMoneylineCloseOdds);//bet365 Away spread close odds column AD 30
-        consensusSpreadAway = consensusElements.select("div.covers-CoversConsensusDetailsTable-row:nth-child(11) > div:nth-child(3) > div:nth-child(1)").text();
+        consensusSpreadAway = consensusDoc.select("div.covers-CoversConsensusDetailsTable-row:nth-child(11) > div:nth-child(3) > div:nth-child(1)").text();
         setSportDataSheet(excelRowIndex, 64, consensusSpreadAway);//Consensus spread away column BM 65
         setSportDataSheet(excelRowIndex, 66, consensusSpreadHome);//Consesus Spread home column BO 67
         setSportDataSheet(excelRowIndex, 67, consensusMoneyLeaderSpreadAway);//Consesus Money Leaders Spread home column BP 68
         setSportDataSheet(excelRowIndex, 73, consnsusMoneyLeaderOverUnderAway);//Consensus Money Leader o/u under home column column BV 74
         setSportDataSheet(excelRowIndex, 74, consnsusMoneyLeaderOverUnderHome);//Consensus o/u under home column column BW 75
-        homeSpreadConsensus = consensusElements.select("div.covers-CoversConsensusDetailsTable-homeWagers").text();// Homespread consensus BQ 69
+        homeSpreadConsensus = consensusDoc.select("div.covers-CoversConsensusDetailsTable-homeWagers").text();// Homespread consensus BQ 69
         System.out.println("EB130..............home city => " + homeCity + " ...........away city => " + awayCity + " ............matchup date => " + matchupDate + " " + season);
         return sportDataWorkbook;
     }
@@ -156,6 +157,6 @@ public class ExcelBuilder
     }
     public void setWeekNumber(String weekNumber) {this.weekNumber = weekNumber;}
     public void setCityNameMap(HashMap<String, String> cityNameMap) {this.cityNameMap = cityNameMap;}
-    public void setConsensusElements(Elements consensusElements) {this.consensusElements = consensusElements;}
+    public void setConsensusDoc(Document consensusDoc) {this.consensusDoc = consensusDoc;}
 }
 

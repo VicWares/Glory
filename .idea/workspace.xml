@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220819 Clean up...add setSportDataSheet() method in Excel Builder">
+    <list default="true" id="086bc27b-3f44-45a5-891b-3a863972e662" name="Changes" comment="version 220823 reconstituted from 220619...working except for consensus">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/DataCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/DataCollector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/ExcelWriter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/wintrisstech/WebSiteReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/wintrisstech/WebSiteReader.java" afterDir="false" />
     </list>
@@ -18,6 +16,9 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -114,7 +115,27 @@
       <workItem from="1661224593738" duration="162000" />
       <workItem from="1661294986305" duration="72000" />
       <workItem from="1661295137762" duration="32000" />
-      <workItem from="1661295187685" duration="8626000" />
+      <workItem from="1661295187685" duration="8822000" />
+      <workItem from="1661305822575" duration="8646000" />
+      <workItem from="1661382472656" duration="3591000" />
+      <workItem from="1661391745814" duration="630000" />
+      <workItem from="1661392386022" duration="360000" />
+      <workItem from="1661394498112" duration="638000" />
+      <workItem from="1661572354497" duration="1269000" />
+      <workItem from="1661619797201" duration="706000" />
+      <workItem from="1661620513006" duration="2635000" />
+      <workItem from="1661623165503" duration="1798000" />
+      <workItem from="1661636770896" duration="8509000" />
+      <workItem from="1661645911121" duration="117000" />
+      <workItem from="1661657828278" duration="2821000" />
+      <workItem from="1661714750399" duration="1593000" />
+      <workItem from="1661722783836" duration="1367000" />
+      <workItem from="1661781464986" duration="447000" />
+      <workItem from="1661781920965" duration="110000" />
+      <workItem from="1661799998981" duration="700000" />
+      <workItem from="1661801156435" duration="443000" />
+      <workItem from="1661899525699" duration="114000" />
+      <workItem from="1662003347221" duration="656000" />
     </task>
     <task id="LOCAL-00001" summary="version 220814...combo working">
       <created>1660436446941</created>
@@ -214,7 +235,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660933357047</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="version 220823 reconstituted from 220619...working except for consensus">
+      <created>1661305642497</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1661305642497</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -245,6 +273,7 @@
     <MESSAGE value="version 220818C Getting consensus data for money leaders...can't match up with teams..." />
     <MESSAGE value="version 220818A Clean up added game identifier column back...was lost" />
     <MESSAGE value="version 220819 Clean up...add setSportDataSheet() method in Excel Builder" />
-    <option name="LAST_COMMIT_MESSAGE" value="version 220819 Clean up...add setSportDataSheet() method in Excel Builder" />
+    <MESSAGE value="version 220823 reconstituted from 220619...working except for consensus" />
+    <option name="LAST_COMMIT_MESSAGE" value="version 220823 reconstituted from 220619...working except for consensus" />
   </component>
 </project>

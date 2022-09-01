@@ -1,13 +1,29 @@
 package org.wintrisstech;
 /****************************************
- * Glory...new start combind Crazy2 with NewCovers...both work sort of
- * version Glory 220823
+ * Glory...
+ * version Glory 220831
  ****************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.w3c.dom.Node;
+
 import javax.swing.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 public class Main
@@ -23,13 +39,15 @@ public class Main
     public ExcelBuilder excelBuilder = new ExcelBuilder();
     public ExcelWriter excelWriter = new ExcelWriter();
     public DataCollector dataCollector = new DataCollector();
-    public WebSiteReader websiteReader;
+    public WebSiteReader websiteReader = new WebSiteReader();
     private org.jsoup.select.Elements consensusElements;
     private int excelRowIndex = 3;
     private String dataGame;
     private Elements bet365Elements;
     private String homeTeamShortName;
     private String awayTeamShortName;
+    private WebDriver webDriver = new SafariDriver();
+
     public static void main(String[] args) throws IOException, InterruptedException
     {
         System.out.println("Version Glory " + VERSION);
@@ -38,18 +56,11 @@ public class Main
     }
     private void getGoing() throws IOException, InterruptedException
     {
-        websiteReader = new WebSiteReader();
-        {
-            fillCityNameMap();//2022-2023 season
-            excelBuilder.setSeason("2022");
-        }
-//        {
-//        fillWeekDateMap2();//2021-2022 season
-//        excelBuilder.setSeason("2021");
-//        }
+        fillCityNameMap();//2022-2023 season
+        excelBuilder.setSeason("2022");
         excelBuilder.setCityNameMap(cityNameMap);
         String weekNumber = JOptionPane.showInputDialog("Enter NFL week number");
-        weekNumber = "2";//For testing
+        weekNumber = "1";//For testing
         excelBuilder.setWeekNumber(weekNumber);
         String weekDate = weekDateMap.get(weekNumber);//Gets week date e.g. 2022-09-08 from week number e.g. 1,2,3,4,...
         org.jsoup.select.Elements nflElements = webSiteReader.readWebsite("https://www.covers.com/sports/nfl/matchups?selectedDate=" + weekDate);//Covers.com "Scores and Matchups" page for this week
@@ -59,23 +70,35 @@ public class Main
         System.out.println(xRefMap);
         System.out.println("Main57 week number => " + weekNumber + ", week date => " + weekDate + ", " + weekElements.size() + " games this week");
         sportDataWorkbook = excelReader.readSportData();
-        System.out.println("Main52 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BEGIN MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
         for (Map.Entry<String, String> entry : xRefMap.entrySet())
         {
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------BEGIN");
-            String dataEventId = entry.getKey();
+            System.out.println("-----------------------------------------------------------------------MAIN LOOP-------------------------------------------------------------------------------------------START");
+            String dataEventId = entry.getKey();//Get two ways of identifiying matchups
             dataGame = xRefMap.get(dataEventId);
             awayTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-away-team-shortname-search");
             homeTeamShortName = nflElements.select("[data-event-id='" + dataEventId + "']").attr("data-home-team-shortname-search");
-            consensusElements = webSiteReader.readWebsite("https://contests.covers.com/consensus/matchupconsensusdetails/dc2b41af-f52f-4e17-b0b1-ac2900676797?showExperts=" + dataEventId);
-            dataCollector.collectConsensusData(consensusElements, dataEventId);
-            excelBuilder.setConsensusElements(consensusElements);
+            String baseUri = "https://www.covers.com/sports/nfl/matchups?selectedDate=2022-09-08";
+            webDriver.navigate().to(baseUri);
+            System.out.println("2.  Website Called");
+            new WebDriverWait(webDriver, Duration.ofSeconds(30)).until(ExpectedConditions.elementToBeClickable(By.cssSelector("#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"))).click();//Scores & Matchups Allow All Cookies click
+           // webDriver.findElement(By.cssSelector("#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll")).click();//Allow cookies
+            System.out.println("3.  Consensus clicked");
+            //Thread.sleep(10000);
+            String consensusPageSource = webDriver.getPageSource();
+            //System.out.println("Main84...sleeping for 10 seconds");
+            Document consensusDoc = Jsoup.parse(consensusPageSource, baseUri);
+            System.out.println("Main84....parsed ==================> " + baseUri);
+            dataCollector.collectConsensusData(consensusDoc, dataEventId);
+            excelBuilder.setConsensusDoc(consensusDoc);
             excelBuilder.setGameIdentifier(dataCollector.getGameIdentifierMap().get(dataEventId));
             excelBuilder.buildExcel(sportDataWorkbook, dataEventId, dataGame, excelRowIndex, soupOddsElements, nflElements);
             excelRowIndex++;
-            System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------END");
+            System.out.println("-------------------------------------------------------------------MAIN LOOP-----------------------------------------------------------------------------------------------END");
+            if (excelRowIndex >6)
+            {
+                break;
+            }
         }
-        System.out.println("Main70 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END MAIN LOOP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
         excelWriter.openOutputStream();
         excelWriter.writeSportData(sportDataWorkbook);
         excelWriter.closeOutputStream();
@@ -84,6 +107,7 @@ public class Main
 
     public HashMap<String, String> buildXref(org.jsoup.select.Elements weekElements)
     {
+        System.out.println("Main105.................Bulding xRef map");
         for (Element e : weekElements)
         {
             String dataLinkString = e.attr("data-link");
@@ -96,6 +120,7 @@ public class Main
     }
     private void fillCityNameMap()
     {
+        System.out.println("Main123............Filling city map.");
         cityNameMap.put("Minneapolis", "Minnesota");//Minnesota Vikings
         cityNameMap.put("Tampa", "Tampa Bay");//Tampa Bay Buccaneers
         cityNameMap.put("Tampa Bay", "Tampa Bay");//Tampa Bay Buccaneers
@@ -179,5 +204,23 @@ public class Main
         weekDateMap.put("16", "2021-12-23");
         weekDateMap.put("17", "2021-01-02");
         weekDateMap.put("18", "2022-01-08");
+    }
+    public String getStringFromDocument(Document doc)
+    {
+        try
+        {
+            DOMSource domSource = new DOMSource((Node) doc);
+            StringWriter writer = new StringWriter();
+            StreamResult result = new StreamResult(writer);
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.transform(domSource, result);
+            return writer.toString();
+        }
+        catch(TransformerException ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

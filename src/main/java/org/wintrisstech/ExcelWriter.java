@@ -3,7 +3,7 @@ package org.wintrisstech;
 /*******************************************************************
  * Covers NFL Extraction Tool
  * Copyright 2020 Dan Farris
- * version Gloty 220823
+ * version Gloty 220831
  * write new NFL Covers data to the large SportData Excel sheet
  *******************************************************************/
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
